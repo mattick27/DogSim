@@ -86,16 +86,38 @@ features_path = 'features'
 x,y = getFeatureData()
 z = getFeaturesIndex()
 t = mapIndex(x,y,z)
-
-km = KMeans(n_clusters=5,max_iter=1000,random_state=0)
 allX,allY = forUse(t,y)
 
-KModel = km.fit(allX[0][0])
-print(km.predict(allX[0][1]))
+n = 5
+number = []
+cosine = []
+numCos=[]
+xtest = []
+acc = 0
+cos = 0
+km = KMeans(n_clusters=n,max_iter=1000,random_state=0)
+kGroup = []
+numberk = []
+KModel = km.fit_predict(allX[0][0])
+search = km.predict(allX[0][1])
 
+for i in range(n):
+    kGroup = np.where(KModel == i)
+    kGroup = np.reshape(kGroup,(len(kGroup[0])))
+    numberk.append(kGroup)
+for i in range(n):
+    numGroup = np.where(search == i)
+    numGroup = np.reshape(numGroup,(len(numGroup[0])))
+    number.append(numGroup)
+for n in range(1):
+    for new in (number[n]):
+        for old in (numberk[n]):
+            numCos.append(cosine_similarity([allX[0][1][new]],[allX[0][0][old]]))
+        cosine.append([new,numCos.index(max(numCos))])
+        numCos = []
+    for i in (cosine):
+        if allY[0][1][i[0]] == allY[0][0][i[1]] :
+            acc += 1
+    cosine = []
 
-
-#print(np.reshape(x[:,np.where(z[0])],(734,1639)).shape)
-#print(x[:,np.where(z[0])].shape)
-#print(np.where(z[1]))
 
