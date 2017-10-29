@@ -87,35 +87,37 @@ x,y = getFeatureData()
 z = getFeaturesIndex()
 t = mapIndex(x,y,z)
 allX,allY = forUse(t,y)
-
-n = 100
-number = []
-cosine = []
-numCos=[]
-xtest = []
-acc = 0
-cos = 0
-km = KMeans(n_clusters=n,max_iter=1000,random_state=0)
-
-KModel = km.fit(allX[0][0])
-search = km.predict(allX[0][1])
-for i in range(n):
-    numGroup = np.where(search == i)
-    numGroup = np.reshape(numGroup,(len(numGroup[0])))
-    number.append(numGroup)
-for n in range(len(number)):
-    for i in (number[n]):
-        for j in (number[n]):
-            if i != j :
-                numCos.append(cosine_similarity([allX[0][1][i]],[allX[0][1][j]]))
-            else :
-                numCos.append(-99)
-        cosine.append(numCos.index(max(numCos)))
-        numCos = []
-    for i,c in enumerate(cosine):
-        if allY[0][1][i] == allY[0][1][c] :
-            acc += 1
-    cosine = []
+n_cluster = [1,5,15,25]
+for seed in range(20):
+    for count in (n_cluster):
+        number = []
+        cosine = []
+        numCos=[]
+        xtest = []
+        acc = 0
+        cos = 0
+        km = KMeans(n_clusters=count,max_iter=1000,random_state=0)
+        KModel = km.fit(allX[seed][0])
+        search = KModel.predict(allX[seed][1])
+        for i in range(count):
+            numGroup = np.where(search == i)
+            numGroup = np.reshape(numGroup,(len(numGroup[0])))
+            number.append(numGroup)
+        for n in range(len(number)):
+            for i in (number[n]):
+                for j in (number[n]):
+                    if i != j :
+                        numCos.append(cosine_similarity([allX[seed][1][i]],[allX[seed][1][j]]))
+                        #print(numCos)
+                    else :
+                        numCos.append(-99)
+                cosine.append(numCos.index(max(numCos)))
+                numCos = []
+            for i,c in enumerate(cosine):
+                if allY[seed][1][number[n][i]] == allY[seed][1][number[n][c]] :
+                    acc += 1
+            cosine = []
+        print("acc of n = ",count,"seed = ",seed,"= ",(acc/len(allX[seed][1]))*100)
 """
 for i in range(n):
     numGroup = np.where(search == i)
@@ -129,7 +131,7 @@ for j in range(len(number[i])-1):
     cosine.append(numCos)
     numCos = []
 """
-print(allY[0][0],allY[0][1])
+
 #cosine = np.reshape(cosine,)
         
     

@@ -87,37 +87,39 @@ x,y = getFeatureData()
 z = getFeaturesIndex()
 t = mapIndex(x,y,z)
 allX,allY = forUse(t,y)
+allX = np.array(allX)
+allY = np.array(allY)
+n_c = [1,5,15,25]
 
-n = 5
-number = []
-cosine = []
-numCos=[]
-xtest = []
-acc = 0
-cos = 0
-km = KMeans(n_clusters=n,max_iter=1000,random_state=0)
-kGroup = []
-numberk = []
-KModel = km.fit_predict(allX[0][0])
-search = km.predict(allX[0][1])
-
-for i in range(n):
-    kGroup = np.where(KModel == i)
-    kGroup = np.reshape(kGroup,(len(kGroup[0])))
-    numberk.append(kGroup)
-for i in range(n):
-    numGroup = np.where(search == i)
-    numGroup = np.reshape(numGroup,(len(numGroup[0])))
-    number.append(numGroup)
-for n in range(1):
-    for new in (number[n]):
-        for old in (numberk[n]):
-            numCos.append(cosine_similarity([allX[0][1][new]],[allX[0][0][old]]))
-        cosine.append([new,numCos.index(max(numCos))])
-        numCos = []
-    for i in (cosine):
-        if allY[0][1][i[0]] == allY[0][0][i[1]] :
-            acc += 1
-    cosine = []
-
+for seed in range(20):
+    for count in (n_c):
+        number = []
+        cosine = []
+        numCos=[]
+        xtest = []
+        acc = 0
+        cos = 0
+        km = KMeans(n_clusters=count,max_iter=1000,random_state=0)
+        
+        KModel = km.fit(allX[seed][0])
+        search = KModel.predict(allX[seed][1])
+        for i in range(count):
+            numGroup = np.where(search == i)
+            numGroup = np.reshape(numGroup,(len(numGroup[0])))
+            number.append(numGroup)
+        for n in range(len(number)):
+            for i in range(len(number[n])):
+                for j in range(i+1,len(number[n])):
+                    numCos.append(cosine_similarity([allX[seed][1][number[n][i]]],[allX[seed][1][number[n][j]]]))
+                if numCos != []:
+            
+                    numCos = numCos.index(max(numCos))+i
+                    cosine.append(numCos)
+                    numCos = []
+            #print(len(cosine))
+            for i,c in enumerate(cosine):
+                if allY[seed][1][number[n][i]] == allY[seed][1][number[n][c]] :
+                    acc += 1
+            cosine = []
+        print("acc of n ",count,",seed ",seed,"= ",(acc/len(allX[seed][1]))*100)
 
