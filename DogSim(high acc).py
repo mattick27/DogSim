@@ -118,27 +118,5 @@ for seed in range(20):
                     acc += 1
             cosine = []
         print("acc of n = ",count,"seed = ",seed,"= ",(acc/len(allX[seed][1]))*100)
-"""
-for i in range(n):
-    numGroup = np.where(search == i)
-    numGroup = np.reshape(numGroup,(len(numGroup[0])))  
-    number.append(numGroup)
-i = 0
-for j in range(len(number[i])-1):
-    for k in range(len(number[i])-1-j):
-        numCos.append(cosine_similarity([allX[0][1][number[i][j]]],[allX[0][1][number[i][j+k+1]]]))
-    numCos = [j,numCos.index(max(numCos))+1]
-    cosine.append(numCos)
-    numCos = []
-"""
 
-#cosine = np.reshape(cosine,)
-        
-    
-
-#a= cosine_similarity([allX[0][1][0]],[allX[0][1][1]])
-#print(max(a))
-#print(np.reshape(x[:,np.where(z[0])],(734,1639)).shape)
-#print(x[:,np.where(z[0])].shape)
-#print(np.where(z[1]))
 
