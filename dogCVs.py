@@ -35,10 +35,10 @@ def mapIndex(x,y,z) :
     allSeed = []
     for i in range(len(z)):
         #print(x[:,np.where(z[i])])
-        allSeed.append(x[:,np.where(z[i])])
-    for j in range(len(z)):
-       # allSeed[i] = np.reshape(allSeed[i],(allSeed[0],allSeed[2]))
-       allSeed[j] = np.reshape(allSeed[j],(734,allSeed[j].shape[2]))
+        allSeed.append(x)
+    # for j in range(len(z)):
+    #    # allSeed[i] = np.reshape(allSeed[i],(allSeed[0],allSeed[2]))
+    #    allSeed[j] = np.reshape(allSeed[j],(734,allSeed[j].shape[2]))
     return allSeed
 
 
@@ -69,8 +69,8 @@ def findCoef(x_train,y_train,nN):
         filtered = [i for i in range (len(x_train[i][0]))] #x_train[0][0] = sample features 
         clf = linear_model.LinearRegression(n_jobs=-1)
         clf.fit(x_train[i],y_train[i])
-        clf.coef_ = list(map(lambda x : abs(x),clf.coef_))
-        COEF = (sorted(zip(clf.coef_,[ i for i in range (len(clf.coef_))]),reverse=True))
+        co = list(map(lambda x : abs(x),clf.coef_))
+        COEF = (sorted(zip(co,[ i for i in range (len(co))]),reverse=True))
         for i in range(len(COEF)):
             if(i < (len(COEF)/100)*n ):
                 filtered[COEF[i][1]] = 1 
@@ -129,7 +129,7 @@ def score(rounded,x,y):
             if(x[i][j] == y[i][j]):
                 acc = acc+1
         acc = float(acc/len(y[0]))
-        acc = round(acc,3)
+        acc = round(acc,4)
         total.append(acc)
     #print('{},{},{}'.format(rounded,total , round(np.mean(total),3)))
 
@@ -212,7 +212,7 @@ allX,allY = forUse(t,y) #allX[x][y](feature) =  x is seed , y [0,1] 0 is trian f
 
 X_train,Y_train,X_test,Y_test = extract(allX,allY)
 
-# for idx,(x,y)in enumerate(zip(X_train[:5],Y_train[:5])):
+# for idx,(x,y)in enumerate(zip(X_train[15:],Y_train[15:])):
 #     a1 = []
 #     a2 = []
 #     a3 = [] #cross validation phase
@@ -276,6 +276,7 @@ for i in rate :
     #z = getFeaturesIndex()
     x_test = selectFeature(x_test,coef)
     #t = mapIndex(x,y,coef)
+    print(len(x_test[0][0]))
     distance = findDistance(x_test) #use cosine for every Index
     distance = fixPosition(distance) #fix cosine with itself = 0 
     closer = findCloser(distance) #find the most likely
